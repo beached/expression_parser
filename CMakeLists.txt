@@ -52,6 +52,7 @@ set( HEADER_FILES
 
 set( SOURCE_FILES
 		expression_parser.cpp
+		expression_parser_test.cpp
 )
 
 add_executable( expression_parser ${HEADER_FILES} ${SOURCE_FILES} )

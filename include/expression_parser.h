@@ -21,8 +21,80 @@
 // SOFTWARE.
 
 #pragma once
+#include <boost/utility/string_ref.hpp>
+#include <memory>
 
 namespace daw {
+	namespace expression_parser {
+		namespace ast {
+			struct expression {
+				virtual ~expression( );
+			};	// expression
 
+			struct value: public expression {
+				virtual ~value( );
+			};	// value
+
+			struct variable: public value, public expression {
+				virtual ~variable( );
+				std::string name;
+			};	// variable
+
+			struct constant: public value, public expression {
+				virtual ~constant( );
+			};	// constant
+			
+			struct function: public expression {
+				virtual ~function( );
+				std::string name;
+				std::vector<std::shard_ptr<expression>> parameters;
+			};	// function
+
+			struct operators: public expression {
+				virtual ~operators( );
+				std::shared_ptr<expression> left_operand;
+				std::shared_ptr<expression> right_operand;
+			};		// operators
+
+			struct operator_add: public operators {
+				virtual ~operator_add( );
+			};	// operator_add
+
+			struct operator_del: public operators {
+				virtual ~operator_del( );
+			};	// operator_del
+
+			struct operator_mul: public operators {
+				virtual ~operator_mul( );
+			};	// operator_mul
+
+			struct operator_div: public operators {
+				virtual ~operator_div( );
+			};	// operator_div
+
+			struct sum: public expression {
+				virtual ~sum( );
+				std::shared_ptr<value> starting_point;
+				std::shared_ptr<value> stoping_point;
+				std::shared_ptr<variable> index;
+				std::shared_ptr<expression> element;
+			};	// sum
+
+			struct control_statement: public expression {
+				virtual ~control_statement( );
+			};	// control_statement
+
+
+			struct constrol_statement_if: public control_statement {
+				virtual ~control_statement_if( );
+				std::vector<std::pair<expression, expression>> cases;
+			}
+		}	// namespace ast
+
+		std::shared_ptr<ast::expression> evaluation( boost::string_ref expression_string );
+
+		std::shared_ptr<ast::expression> simplify( std::shared_ptr<ast::expression> e );
+
+	}	// namespace expression_parser
 }	// namespace daw
 
